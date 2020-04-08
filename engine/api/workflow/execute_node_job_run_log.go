@@ -35,7 +35,7 @@ func ExistsStepLog(db gorp.SqlExecutor, id int64, order int64) (bool, int64, err
 func LoadStepLogs(db gorp.SqlExecutor, id int64, order int64) (*sdk.Log, error) {
 	log.Debug("LoadStepLogs> workflow_node_run_job_id = %d", id)
 	query := `
-		SELECT id, workflow_node_run_job_id, workflow_node_run_id, start, last_modified, done, step_order, value
+		SELECT id, workflow_node_run_job_id, workflow_node_run_id, start, last_modified, done, step_order, encode(value, 'escape')
 		FROM workflow_node_run_job_logs
 		WHERE workflow_node_run_job_id = $1 AND step_order = $2`
 	logs := &sdk.Log{}
@@ -62,7 +62,7 @@ func LoadStepLogs(db gorp.SqlExecutor, id int64, order int64) (*sdk.Log, error) 
 //LoadLogs load logs (workflow_node_run_job_logs) for a job (workflow_node_run_job)
 func LoadLogs(db gorp.SqlExecutor, id int64) ([]sdk.Log, error) {
 	query := `
-		SELECT id, workflow_node_run_job_id, workflow_node_run_id, start, last_modified, done, step_order, value
+		SELECT id, workflow_node_run_job_id, workflow_node_run_id, start, last_modified, done, step_order, encode(value, 'escape')
 		FROM workflow_node_run_job_logs
 		WHERE workflow_node_run_job_id = $1
 		ORDER BY id`
